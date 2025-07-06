@@ -52,6 +52,7 @@ const FileUpload = ({ onSuccess, onProgress, fileType }: FileUploadProps) => {
           }
         },
       });
+      console.log("upload response:", res);
 
       onSuccess(res);
     } catch (error) {

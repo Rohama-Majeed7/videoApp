@@ -2,12 +2,14 @@ import Link from "next/link";
 import { IVideo } from "../../../models/Video";
 
 export default function VideoComponent({ video }: { video: IVideo }) {
+      
+
   return (
     <div className="rounded-xl overflow-hidden bg-slate-800 shadow-lg hover:shadow-purple-700 transition-all duration-300">
       {/* Video Thumbnail */}
       <figure className="relative">
         <Link href={`/videos/${video._id}`} className="group block">
-          <div className="aspect-[14/16] w-full overflow-hidden">
+          <div className=" w-full overflow-hidden">
             <video
               src={video.videoUrl}
               poster={video.thumbnailUrl}

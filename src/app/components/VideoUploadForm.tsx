@@ -13,8 +13,9 @@ function VideoUploadForm() {
   const [description, setDescription] = useState("");
   const [progress, setProgress] = useState(0);
   const [loading, setLoading] = useState(false);
-
+  const [rawVideoPath, setRawVideoPath] = useState("");
   const router = useRouter();
+  const TransformedThumbnailUrl = `https://ik.imagekit.io/cfkmxvzrv${rawVideoPath}/ik-thumbnail.jpg?ik-thumbnail-time=3`;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -89,7 +90,13 @@ function VideoUploadForm() {
           <FileUpload
             fileType="video"
             onProgress={(p) => setProgress(p)}
-            onSuccess={(res) => setVideoUrl(res.url)}
+            onSuccess={(res) => {
+              const thumbUrl = `https://ik.imagekit.io/cfkmxvzrv${res.filePath}/ik-thumbnail.jpg?ik-thumbnail-time=15`;
+              console.log("Generated thumbnail URL:", thumbUrl); // ✅ log it here
+
+              setVideoUrl(res.url);
+              setThumbnailUrl(thumbUrl);
+            }}
           />
           {progress > 0 && progress < 100 && (
             <p className="text-sm text-slate-400 mt-1">
@@ -110,10 +117,10 @@ function VideoUploadForm() {
           <label className="block text-sm font-medium text-slate-300 mb-1">
             Thumbnail Image
           </label>
-          <FileUpload
+          {/* <FileUpload
             fileType="image"
             onSuccess={(res) => setThumbnailUrl(res.url)}
-          />
+          /> */}
           {thumbnailUrl && (
             <Image
               src={thumbnailUrl}

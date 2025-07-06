@@ -15,12 +15,14 @@ export interface IVideo {
   transformation?: {
     width: number;
     height: number;
-    quality?: number; 
+    quality?: number;
   };
+  createdBy: mongoose.Types.ObjectId; // ✅ add this
 }
 
+
 const videoSchema = new Schema<IVideo>(
-  { 
+  {
     title: { type: String, required: true },
     description: { type: String, required: true },
     videoUrl: { type: String, required: true },
@@ -29,12 +31,20 @@ const videoSchema = new Schema<IVideo>(
     transformation: {
       width: { type: Number, default: VIDEO_DIMENSIONS.width },
       height: { type: Number, default: VIDEO_DIMENSIONS.height },
-      quality: { type: Number, min:1,max:100 }, // Default quality
+      quality: { type: Number, min: 1, max: 100 },
+    },
+
+    // ✅ Add this field
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
   },
   {
     timestamps: true,
   }
 );
+
 const Video = models?.Video || model<IVideo>("Video", videoSchema);
 export default Video;
