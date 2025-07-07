@@ -1,6 +1,4 @@
-// File: app/api/upload-auth/route.ts
 import { getUploadAuthParams } from "@imagekit/next/server";
-
 export async function GET() {
   try {
     const authenticationParameters = getUploadAuthParams({
@@ -12,7 +10,9 @@ export async function GET() {
       authenticationParameters,
       publicKey: process.env.NEXT_PUBLIC_PUBLIC_KEY,
     });
-  } catch (error) {
+  } catch (error: unknown) {
+    console.log("error:", error);
+
     return Response.json(
       { error: "Failed to get upload auth parameters" },
       { status: 500 }

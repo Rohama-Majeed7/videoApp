@@ -13,9 +13,9 @@ function VideoUploadForm() {
   const [description, setDescription] = useState("");
   const [progress, setProgress] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [rawVideoPath, setRawVideoPath] = useState("");
+  // const [rawVideoPath, setRawVideoPath] = useState("");
   const router = useRouter();
-  const TransformedThumbnailUrl = `https://ik.imagekit.io/cfkmxvzrv${rawVideoPath}/ik-thumbnail.jpg?ik-thumbnail-time=3`;
+  // const TransformedThumbnailUrl = `https://ik.imagekit.io/cfkmxvzrv${rawVideoPath}/ik-thumbnail.jpg?ik-thumbnail-time=3`;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,7 +26,7 @@ function VideoUploadForm() {
 
     setLoading(true);
     try {
-      const response = await axios.post("/api/video", {
+      await axios.post("/api/video", {
         title,
         description,
         videoUrl,
@@ -34,12 +34,23 @@ function VideoUploadForm() {
       });
       alert("Video uploaded successfully!");
       router.push("/dashboard");
-    } catch (error: any) {
-      console.error("Upload error:", error);
-      alert(
-        error?.response?.data?.error || "An error occurred while uploading."
-      );
-    } finally {
+    } 
+    catch (error: unknown) {
+  console.error("Upload error:", error);
+
+  if (
+    typeof error === "object" &&
+    error !== null &&
+    "response" in error &&
+    typeof (error as { response?: { data?: { error?: string } } }).response?.data?.error === "string"
+  ) {
+    alert((error as { response: { data: { error: string } } }).response.data.error);
+  } else {
+    alert("An error occurred while uploading.");
+  }
+}
+
+    finally {
       setLoading(false);
     }
   };

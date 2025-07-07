@@ -7,9 +7,9 @@ import { useRouter } from "next/navigation";
 export default function RegisterPage() {
   const router = useRouter();
   const [username, setUsername] = useState("");
-  const [email, setEmail]       = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError]       = useState("");
+  const [error, setError] = useState("");
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,8 +23,20 @@ export default function RegisterPage() {
       });
 
       if (res.status === 201) router.push("/login");
-    } catch (err: any) {
-      setError(err.response?.data?.error || "Registration failed");
+    } catch (err: unknown) {
+      if (
+        typeof err === "object" &&
+        err !== null &&
+        "response" in err &&
+        typeof (err as { response?: { data?: { error?: string } } }).response
+          ?.data?.error === "string"
+      ) {
+        setError(
+          (err as { response: { data: { error: string } } }).response.data.error
+        );
+      } else {
+        setError("Registration failed");
+      }
     }
   };
 
@@ -34,7 +46,9 @@ export default function RegisterPage() {
         onSubmit={handleRegister}
         className="w-full max-w-md bg-slate-800 p-8 rounded-xl shadow-xl space-y-4"
       >
-        <h1 className="text-2xl font-bold text-center text-purple-400">Create an Account</h1>
+        <h1 className="text-2xl font-bold text-center text-purple-400">
+          Create an Account
+        </h1>
 
         {error && <p className="text-red-500 text-sm">{error}</p>}
 
