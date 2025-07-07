@@ -20,7 +20,7 @@ if (!context) {
       try {
         const response = await axios.get("/api/video");
         console.log("response:",response);
-        if(response.statusText === "OK"){
+        if(response.status === 200){
         setVideos(response.data);
         }
         else{
