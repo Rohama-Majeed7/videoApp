@@ -16,7 +16,7 @@ const DeleteVideo = ({ videoId, fileId }: VideoProps) => {
     throw new Error("DeleteVideo must be used inside VideoProvider");
   }
 
-  const { setVideoRefresh, videoRefresh } = context;
+  const { setVideoRefresh } = context;
   console.log("set video Refreh:",setVideoRefresh);
   
   const OnDeleteHandle = async () => {

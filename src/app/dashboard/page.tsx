@@ -1,6 +1,5 @@
 import React from "react";
 import VideoFeed from "@/app/components/VideoFeed";
-import Link from "next/link";
 import Header from "../components/Header";
 import { getServerSession } from "next-auth";
 const page = async () => {
