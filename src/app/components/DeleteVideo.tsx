@@ -7,10 +7,9 @@ import { Types } from "mongoose";
 
 interface VideoProps {
   videoId: string | Types.ObjectId;
-  fileId: string;
 }
 
-const DeleteVideo = ({ videoId, fileId }: VideoProps) => {
+const DeleteVideo = ({ videoId}: VideoProps) => {
   const context = useContext(VideoContext);
   if (!context) {
     throw new Error("DeleteVideo must be used inside VideoProvider");
@@ -23,7 +22,6 @@ const DeleteVideo = ({ videoId, fileId }: VideoProps) => {
     try {
       await axios.delete("/api/video", {
         data: {
-          fileId: fileId,
           videoId: typeof videoId === "string" ? videoId : videoId.toString(),
         },
       });

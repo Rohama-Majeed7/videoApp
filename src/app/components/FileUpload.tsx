@@ -66,7 +66,21 @@ const FileUpload = ({ onSuccess, onProgress, fileType }: FileUploadProps) => {
       });
       console.log("upload response:", res);
 
-      onSuccess(res);
+      if (!res.fileId) {
+        throw new Error("Upload response missing fileId");
+      }
+      onSuccess({
+        fileId: res.fileId,
+        name: res.name || "",
+        url: res.url || "",
+        thumbnailUrl: res.thumbnailUrl,
+        filePath: res.filePath || "",
+        height: res.height,
+        width: res.width,
+        size: res.size || 0,
+        fileType: fileType ?? "image",
+        isPrivateFile: res.isPrivateFile,
+      });
     } catch (error) {
       console.error("Upload failed", error);
       setError("Upload failed. Try again.");

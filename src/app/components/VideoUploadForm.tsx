@@ -13,8 +13,6 @@ function VideoUploadForm() {
   }
   // const { setSelectedVideoId } = context;
   const [videoUrl, setVideoUrl] = useState("");
-  const [fileId, setFileId] = useState("");
-
   const [thumbnailUrl, setThumbnailUrl] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -35,7 +33,6 @@ function VideoUploadForm() {
         title,
         description,
         videoUrl,
-        fileId,
         thumbnailUrl,
       });
       alert("Video uploaded successfully!");
@@ -111,7 +108,6 @@ function VideoUploadForm() {
             onSuccess={(res) => {
               console.log("video fileID:", res);
               setVideoUrl(res.url);
-              setFileId(res.fileId);
             }}
           />
           {progress > 0 && progress < 100 && (
