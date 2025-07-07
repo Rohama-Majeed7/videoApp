@@ -76,26 +76,15 @@ export async function POST(request: NextRequest) {
 export async function DELETE(req: NextRequest) {
   try {
     const body = await req.json();
-    const { videoId, fileId } = body;
+    const { videoId} = body;
 
-    if (!videoId || !fileId) {
+    if (!videoId) {
       return NextResponse.json(
         { error: "Missing videoId or fileId" },
         { status: 400 }
       );
     }
     await dbConnect();
-
-    // 1. Delete from ImageKit
-    // try {
-    //   await deleteFromImageKit(fileId);
-    // } catch (imgErr) {
-    //   console.error("ImageKit delete failed:", imgErr);
-    //   return NextResponse.json(
-    //     { error: "ImageKit delete failed" },
-    //     { status: 500 }
-    //   );
-    // }
 
     // 2. Delete from MongoDB
     try {
