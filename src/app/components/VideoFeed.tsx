@@ -1,19 +1,31 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import VideoComponent from "./VideoComponent";
 import { IVideo } from "../../../models/Video";
-
+import { VideoContext } from "./ContextProvider";
 export default function VideoFeed() {
   const [videos, setVideos] = useState<IVideo[]>([]);
   const [loading, setLoading] = useState(true);
-
+const context = useContext(VideoContext)
+if (!context) {
+    throw new Error("DeleteVideo must be used inside VideoProvider");
+  }
+  const {videoRefresh} = context
+  console.log("video Refresh:",videoRefresh);
+  
   useEffect(() => {
     const fetchVideos = async () => {
       try {
         const response = await axios.get("/api/video");
+        console.log("response:",response);
+        if(response.statusText === "OK"){
         setVideos(response.data);
+        }
+        else{
+          setVideos([])
+        }
       } catch (error) {
         console.error("Error fetching videos:", error);
       } finally {
@@ -22,7 +34,7 @@ export default function VideoFeed() {
     };
 
     fetchVideos();
-  }, []);
+  }, [videoRefresh]);
 
   return (
     <div className="min-h-screen bg-slate-900 py-10 px-4 text-slate-100">

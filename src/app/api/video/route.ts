@@ -1,9 +1,11 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { dbConnect } from "../../../../lib/db";
 import Video, { IVideo } from "../../../../models/Video";
 import { authOptions } from "../../../../lib/auth";
 import { getServerSession } from "next-auth";
 import User from "../../../../models/User";
+// Delete video from image kit
+// import { deleteFromImageKit } from "@/lib/deleteFromImageKit";
 
 export async function GET() {
   try {
@@ -21,11 +23,13 @@ export async function GET() {
     console.log("videos:", video);
 
     if (!video || video.length === 0) {
-      return Response.json([], { status: 404 });
+      return Response.json([], { status: 200 });
     }
 
     return Response.json(video, { status: 200 });
   } catch (error) {
+    console.log("error:", error);
+
     return Response.json({ error: "Failed to fetch videos" }, { status: 500 });
   }
 }
@@ -66,5 +70,50 @@ export async function POST(request: NextRequest) {
     console.log("error:", error);
 
     return Response.json({ error: "Failed to create video" }, { status: 500 });
+  }
+}
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const body = await req.json();
+    const { videoId, fileId } = body;
+
+    if (!videoId || !fileId) {
+      return NextResponse.json(
+        { error: "Missing videoId or fileId" },
+        { status: 400 }
+      );
+    }
+    await dbConnect();
+
+    // 1. Delete from ImageKit
+    // try {
+    //   await deleteFromImageKit(fileId);
+    // } catch (imgErr) {
+    //   console.error("ImageKit delete failed:", imgErr);
+    //   return NextResponse.json(
+    //     { error: "ImageKit delete failed" },
+    //     { status: 500 }
+    //   );
+    // }
+
+    // 2. Delete from MongoDB
+    try {
+      await Video.findByIdAndDelete(videoId);
+    } catch (dbErr) {
+      console.error("DB delete failed:", dbErr);
+      return NextResponse.json(
+        { error: "Database delete failed" },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json({ success: true }, { status: 200 });
+  } catch (err) {
+    console.error("Unknown DELETE error:", err);
+    return NextResponse.json(
+      { error: "Unknown delete error" },
+      { status: 500 }
+    );
   }
 }

@@ -3,9 +3,21 @@
 import { upload } from "@imagekit/next";
 import { useState } from "react";
 import axios from "axios";
+interface ImageKitUploadResponse {
+  fileId: string;
+  name: string;
+  url: string;
+  thumbnailUrl?: string;
+  filePath: string;
+  height?: number;
+  width?: number;
+  size: number;
+  fileType: "image" | "video";
+  isPrivateFile?: boolean;
+}
 
 interface FileUploadProps {
-  onSuccess: (res: any) => void;
+    onSuccess: (res: ImageKitUploadResponse) => void;
   onProgress?: (progress: number) => void;
   fileType?: "image" | "video";
 }

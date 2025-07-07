@@ -60,8 +60,13 @@ export const dbConnect = async () => {
 
     await mongoose.connect(MONGODB_URI);
     console.log("✅ MongoDB connected");
-  } catch (err: any) {
+  } catch (err: unknown) {
+  if (err instanceof Error) {
     console.error("❌ MongoDB connection error:", err.message);
-    throw err;
+  } else {
+    console.error("❌ MongoDB connection error:", err);
   }
+  throw err;
+}
+
 };

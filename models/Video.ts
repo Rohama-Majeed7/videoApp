@@ -1,4 +1,5 @@
 import mongoose, { models, model, Schema } from "mongoose";
+import Stream from "stream";
 
 export const VIDEO_DIMENSIONS = {
   width: 1080,
@@ -6,11 +7,12 @@ export const VIDEO_DIMENSIONS = {
 } as const;
 
 export interface IVideo {
-  _id?: mongoose.Types.ObjectId;
+  _id?: mongoose.Types.ObjectId | string;
   title: string;
   description: string;
   videoUrl: string;
   thumbnailUrl: string;
+  fileId: string;
   controls?: boolean;
   transformation?: {
     width: number;
@@ -20,12 +22,12 @@ export interface IVideo {
   createdBy: mongoose.Types.ObjectId; // ✅ add this
 }
 
-
 const videoSchema = new Schema<IVideo>(
   {
     title: { type: String, required: true },
     description: { type: String, required: true },
     videoUrl: { type: String, required: true },
+    fileId: { type: String },
     thumbnailUrl: { type: String, required: true },
     controls: { type: Boolean, default: true },
     transformation: {

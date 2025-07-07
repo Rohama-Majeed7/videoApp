@@ -1,21 +1,26 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import FileUpload from "./FileUpload";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-
+import { VideoContext } from "@/app/components/ContextProvider";
 function VideoUploadForm() {
+  const context = useContext(VideoContext);
+  if (!context) {
+    throw new Error("DeleteVideo must be used inside VideoProvider");
+  }
+  // const { setSelectedVideoId } = context;
   const [videoUrl, setVideoUrl] = useState("");
+  const [fileId, setFileId] = useState("");
+
   const [thumbnailUrl, setThumbnailUrl] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [progress, setProgress] = useState(0);
   const [loading, setLoading] = useState(false);
-  // const [rawVideoPath, setRawVideoPath] = useState("");
   const router = useRouter();
-  // const TransformedThumbnailUrl = `https://ik.imagekit.io/cfkmxvzrv${rawVideoPath}/ik-thumbnail.jpg?ik-thumbnail-time=3`;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,27 +35,29 @@ function VideoUploadForm() {
         title,
         description,
         videoUrl,
+        fileId,
         thumbnailUrl,
       });
       alert("Video uploaded successfully!");
       router.push("/dashboard");
-    } 
-    catch (error: unknown) {
-  console.error("Upload error:", error);
+    } catch (error: unknown) {
+      console.error("Upload error:", error);
 
-  if (
-    typeof error === "object" &&
-    error !== null &&
-    "response" in error &&
-    typeof (error as { response?: { data?: { error?: string } } }).response?.data?.error === "string"
-  ) {
-    alert((error as { response: { data: { error: string } } }).response.data.error);
-  } else {
-    alert("An error occurred while uploading.");
-  }
-}
-
-    finally {
+      if (
+        typeof error === "object" &&
+        error !== null &&
+        "response" in error &&
+        typeof (error as { response?: { data?: { error?: string } } }).response
+          ?.data?.error === "string"
+      ) {
+        alert(
+          (error as { response: { data: { error: string } } }).response.data
+            .error
+        );
+      } else {
+        alert("An error occurred while uploading.");
+      }
+    } finally {
       setLoading(false);
     }
   };
@@ -102,11 +109,9 @@ function VideoUploadForm() {
             fileType="video"
             onProgress={(p) => setProgress(p)}
             onSuccess={(res) => {
-              const thumbUrl = `https://ik.imagekit.io/cfkmxvzrv${res.filePath}/ik-thumbnail.jpg?ik-thumbnail-time=15`;
-              console.log("Generated thumbnail URL:", thumbUrl); // ✅ log it here
-
+              console.log("video fileID:", res);
               setVideoUrl(res.url);
-              setThumbnailUrl(thumbUrl);
+              setFileId(res.fileId);
             }}
           />
           {progress > 0 && progress < 100 && (
@@ -128,10 +133,10 @@ function VideoUploadForm() {
           <label className="block text-sm font-medium text-slate-300 mb-1">
             Thumbnail Image
           </label>
-          {/* <FileUpload
+          <FileUpload
             fileType="image"
             onSuccess={(res) => setThumbnailUrl(res.url)}
-          /> */}
+          />
           {thumbnailUrl && (
             <Image
               src={thumbnailUrl}

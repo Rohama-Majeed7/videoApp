@@ -1,15 +1,15 @@
 "use client";
 
-import { useSession, signOut } from "next-auth/react";
+import { useSession} from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { HiOutlineUser } from "react-icons/hi";
+import ProfileCard from "./ProfileCard";
 
 export default function Header() {
   const { data: session, status } = useSession();
   const router = useRouter();
-
-  const handleLogout = async () => {
-    await signOut({ callbackUrl: "/login" });
-  };
+const [user,setUser] = useState(false)
 
   return (
     <header className="sticky top-0 z-50 flex items-center justify-between px-6 py-4 bg-slate-900 shadow-md text-slate-100">
@@ -23,18 +23,9 @@ export default function Header() {
 
       {/* User Info */}
       {status === "authenticated" && session?.user && (
-        <div className="flex items-center gap-3">
-          <span className="text-sm sm:text-base font-medium truncate max-w-[140px]">
-            👤 {session.user.name}
-          </span>
-          <button
-            onClick={handleLogout}
-            className="bg-red-600 hover:bg-red-700 text-white text-sm px-4 py-1.5 rounded-md transition-all duration-200"
-          >
-            Logout
-          </button>
-        </div>
+        <HiOutlineUser className="border-2 p-2 border-indigo-800 h-10 w-10 rounded-full" onClick={() => setUser(!user) } />
       )}
+      {user && <ProfileCard />}
     </header>
   );
 }

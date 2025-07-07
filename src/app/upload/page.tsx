@@ -9,7 +9,6 @@ export default function VideoUploadPage() {
         <h1 className="text-3xl sm:text-4xl font-bold text-center text-purple-400">
           📤 Upload New Reel
         </h1>
-
         <VideoUploadForm />
       </div>
     </div>
