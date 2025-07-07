@@ -35,7 +35,7 @@ export default function VideoComponent({ video }: { video: IVideo }) {
       </div>
       </div>
       {video._id && (
-        <DeleteVideo videoId={video._id.toString()} fileId={video.fileId} />
+        <DeleteVideo videoId={video._id.toString()}/>
       )}
     </div>
   );
