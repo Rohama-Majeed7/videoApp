@@ -21,22 +21,17 @@ export default function RegisterPage() {
         email,
         password,
       });
-
-      if (res.status === 201) router.push("/login");
-    } catch (err: unknown) {
-      if (
-        typeof err === "object" &&
-        err !== null &&
-        "response" in err &&
-        typeof (err as { response?: { data?: { error?: string } } }).response
-          ?.data?.error === "string"
-      ) {
-        setError(
-          (err as { response: { data: { error: string } } }).response.data.error
-        );
-      } else {
-        setError("Registration failed");
+      alert(res.data.message);
+      if (res.status === 201) {
+        router.push("/login")
       }
+    } catch (err) {
+      console.log("error:", err);
+      let errorMsg = "An error occurred";
+      if (axios.isAxiosError(err) && err.response && err.response.data && err.response.data.error) {
+        errorMsg = err.response.data.error;
+      }
+      setError(errorMsg);
     }
   };
 

@@ -6,9 +6,9 @@ import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail]       = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError]       = useState("");
+  const [error, setError] = useState("");
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,9 +19,12 @@ export default function LoginPage() {
       email,
       password,
     });
+    console.log("login error:", res);
 
     if (res?.error) setError(res.error);
-    else router.push("/");
+    else {
+      alert("Login Successfuly")
+      router.push("/")};
   };
 
   return (
@@ -30,7 +33,9 @@ export default function LoginPage() {
         onSubmit={handleLogin}
         className="w-full max-w-md bg-slate-800 p-8 rounded-xl shadow-xl space-y-4"
       >
-        <h1 className="text-2xl font-bold text-center text-purple-400">Welcome Back</h1>
+        <h1 className="text-2xl font-bold text-center text-purple-400">
+          Welcome Back
+        </h1>
 
         {error && <p className="text-red-500 text-sm">{error}</p>}
 
